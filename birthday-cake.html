@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Card</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5e1da;
+        }
+        .card {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+        }
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 10px;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff4081;
+        }
+        .cake, .bottomCake {
+            position: relative;
+            width: 100px;
+            height: 60px;
+            background: #ffb74d;
+            border-radius: 10px;
+            box-shadow: inset 0 -5px #d2691e;
+            margin-top: 10px;
+        }
+        .bottomCake{
+            margin-top: 0;
+            width: 150px;
+            height: 80px;
+        }
+        .candle {
+            position: absolute;
+            top: -20px;
+            width: 10px;
+            height: 20px;
+            background: red;
+        }
+        .candle:nth-child(1) { left: 25%; }
+        .candle:nth-child(2) { left: 50%; transform: translateX(-50%); }
+        .candle:nth-child(3) { right: 25%; }
+        .flame {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            width: 14px;
+            height: 20px;
+            background: orange;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            animation: flicker 1s infinite alternate;
+        }
+        @keyframes flicker {
+            0% { opacity: 2; transform: translateX(-50%) scale(1); }
+            100% { opacity: 0.8; transform: translateX(-50%) scale(1.2); }
+        }
+
+        .click-text {
+        font-size: 20px; /* Slightly larger font */
+        font-weight: bold;
+        color: #ff4081; /* Keep the pink color */
+        text-decoration: underline; /* Subtle emphasis */
+        letter-spacing: 1px; /* Improve readability */
+        margin-bottom: 50px;
+        }
+
+        p{
+            font-size: 18px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin:5px;
+        }
+
+        .fireworks-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+        }
+        .firework {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            opacity: 0;
+            animation: explode 0.8s ease-out forwards;
+            filter: blur(2px);
+        }
+        @keyframes explode {
+            0% {
+                transform: scale(1) translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5) translate(var(--x), var(--y));
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card" onclick="flipCard()">
+        <div class="card-inner">
+            <div class="card-front">
+                <div class="click-text">Click Me</div>
+                <div class="cake">
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                </div>
+            <div class="bottomCake"></div> 
+        </div>
+        <div class="card-back">Happy Birthday Elly!!!
+            <p> Wishing you all the best in your studies</p>
+            <p> And may you be employed after graduation🤭 </p>
+        </div>
+    </div>
+    <div class="fireworks-container"></div>
+    <script>
+        function flipCard() {
+            let card = document.querySelector(".card");
+            card.classList.toggle("flipped");
+            if (card.classList.contains("flipped")) {
+                createFireworks();
+            }
+        }
+
+        function createFireworks() {
+            let fireworksContainer = document.querySelector(".fireworks-container");
+            let colors = ["red", "blue", "yellow", "green", "purple", "orange", "pink"];
+
+            for (let i = 0; i < 30; i++) { // More particles for a bigger explosion
+                let firework = document.createElement("div");
+                firework.classList.add("firework");
+
+                let color = colors[Math.floor(Math.random() * colors.length)];
+                firework.style.background = `radial-gradient(circle, ${color}, white)`;
+                firework.style.boxShadow = `0 0 10px ${color}`;
+
+                let x = (Math.random() - 0.5) * 1000 + "px"; // Larger spread
+                let y = (Math.random() - 0.5) * 1000 + "px";
+
+                firework.style.setProperty("--x", x);
+                firework.style.setProperty("--y", y);
+                firework.style.left = "20%";
+                firework.style.top = "20%";
+                fireworksContainer.appendChild(firework);
+
+                setTimeout(() => firework.remove(), 1000);
+            }
+        }
+    </script>
+</body>
+</html>
+
+
